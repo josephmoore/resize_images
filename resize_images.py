@@ -13,6 +13,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', help='image or directory of images to be resized', required=True)
 parser.add_argument('-t', '--type', help='image file type, e.g. jpg png, only required if destination = dir')
 parser.add_argument('-o', '--output', help='image or directory of images to save resize to', required=True)
+parser.add_argument('-q', '--quality', help='0-100, lowest to highest quality compression', default=90)
 group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument('--height', help='target height of resized images', type=int)
 group.add_argument('--width', help='target width of resized images', type=int)
@@ -22,12 +23,13 @@ args = parser.parse_args()
 SRC = args.input
 FTYPE = args.type
 DST = args.output
+QUALITY = args.quality
 TARGETHEIGHT = args.height
 TARGETWIDTH = args.width
 
 
 img_meta = {
-        'quality':90,
+        'quality':int(QUALITY),
         'subsampling': 0}
 
 
@@ -88,5 +90,3 @@ def main():
 if __name__ == "__main__":
     main()
     #print(datetime.now() - starttime)
-
-
