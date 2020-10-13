@@ -7,7 +7,6 @@ from glob import glob
 from PIL import Image
 import concurrent.futures
 
-#starttime = datetime.now()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', help='image or directory of images to be resized', required=True)
@@ -89,4 +88,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    #print(datetime.now() - starttime)
