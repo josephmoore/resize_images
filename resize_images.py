@@ -57,14 +57,23 @@ def main():
             print("specify a file type when sourcing from a directory")
             sys.exit()
         if os.path.isdir(DST) == False:
-            print(f"output directory does not exist creating {DST}")
-            os.makedirs(DST)
+            print(f"output directory {DST} does not exist")
+            s = input("create necessary directory?[Y/n]: ")
+            if s.lower() == 'y':
+                os.makedirs(DST)
+            else:
+                sys.exit()
         img_list = get_image_paths(SRC, FTYPE)
         resize_all_images(img_list)
     elif os.path.isfile(SRC):
-        if os.path.isdir(DST) == False:
-            print(f"output directory does not exist creating {DST}")
-            os.makedirs(DST)
+        d = os.path.split(DST)[0]
+        if os.path.isdir(d) == False:
+            print(f"output directory {d} does not exist")
+            s = input("create necessary directory?[Y/n]: ")
+            if s.lower() == 'y':
+                os.makedirs(d)
+            else:
+                sys.exit()
         resize_image(SRC)
 
 
