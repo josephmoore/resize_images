@@ -8,30 +8,6 @@ from PIL import Image
 import concurrent.futures
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--input', help='image or directory of images to be resized', required=True)
-parser.add_argument('-t', '--type', help='image file type, e.g. jpg png, only required if destination = dir')
-parser.add_argument('-o', '--output', help='image or directory of images to save resize to', required=True)
-parser.add_argument('-q', '--quality', help='0-100, lowest to highest quality compression', default=90)
-group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument('--height', help='target height of resized images', type=int)
-group.add_argument('--width', help='target width of resized images', type=int)
-args = parser.parse_args()
-
-
-SRC = args.input
-FTYPE = args.type
-DST = args.output
-QUALITY = args.quality
-TARGETHEIGHT = args.height
-TARGETWIDTH = args.width
-
-
-img_meta = {
-        'quality':int(QUALITY),
-        'subsampling': 0}
-
-
 def compute_height(img):
     height_percent = (TARGETHEIGHT/float(img.size[1]))
     target_width = int(float(height_percent) * float(img.size[0]))
@@ -80,11 +56,38 @@ def main():
         if FTYPE is None:
             print("specify a file type when sourcing from a directory")
             sys.exit()
+        if os.path.isdir(DST) == False:
+            print(f"output directory does not exist creating {DST}")
+            os.makedirs(DST)
         img_list = get_image_paths(SRC, FTYPE)
         resize_all_images(img_list)
     elif os.path.isfile(SRC):
+        if os.path.isdir(DST) == False:
+            print(f"output directory does not exist creating {DST}")
+            os.makedirs(DST)
         resize_image(SRC)
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', help='image or directory of images to be resized', required=True)
+    parser.add_argument('-t', '--type', help='image file type, e.g. jpg png, only required if destination = dir')
+    parser.add_argument('-o', '--output', help='image or directory of images to save resize to', required=True)
+    parser.add_argument('-q', '--quality', help='0-100, lowest to highest quality compression', default=90)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--height', help='target height of resized images', type=int)
+    group.add_argument('--width', help='target width of resized images', type=int)
+    args = parser.parse_args()
+
+    SRC = args.input
+    FTYPE = args.type
+    DST = args.output
+    QUALITY = args.quality
+    TARGETHEIGHT = args.height
+    TARGETWIDTH = args.width
+
+    img_meta = {
+            'quality':int(QUALITY),
+            'subsampling': 0}
+
     main()
